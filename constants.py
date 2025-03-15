@@ -11,3 +11,14 @@ PLAYER_SPEED = 200
 SHOT_RADIUS = 5
 PLAYER_SHOOT_SPEED = 500
 PLAYER_SHOOT_COOLDOWN = 0.3
+
+# Scoring system constants
+SCORE_PER_ASTEROID = {
+    20: 100,   # Small asteroid
+    40: 50,    # Medium asteroid
+    60: 25     # Large asteroid
+}
+
+# Player lives and game progression
+PLAYER_LIVES = 3
+LEVEL_UP_SCORE = 1000  # Score needed to level up
