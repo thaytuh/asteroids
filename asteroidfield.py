@@ -12,6 +12,10 @@ class AsteroidField(pygame.sprite.Sprite):
     with random velocities pointing toward the play area. It handles the timing
     and positioning of new asteroid spawns.
     """
+    # Define the four edges of the screen where asteroids can spawn
+    # Each edge is defined as a [direction_vector, position_function] pair
+    # - direction_vector: The direction asteroids will initially move from this edge
+    # - position_function: A function that generates a random position along this edge
     edges = [
         [
             pygame.Vector2(1, 0),
@@ -68,15 +72,32 @@ class AsteroidField(pygame.sprite.Sprite):
         Args:
             dt: Delta time in seconds since last frame.
         """
+        # Increment the spawn timer by the time elapsed since last frame
         self.spawn_timer += dt
+        
+        # Check if it's time to spawn a new asteroid
         if self.spawn_timer > ASTEROID_SPAWN_RATE:
             self.spawn_timer = 0
 
-            # spawn a new asteroid at a random edge
+            # Choose a random edge to spawn the asteroid from
             edge = random.choice(self.edges)
+            
+            # Generate a random speed between 40-100 pixels/second
             speed = random.randint(40, 100)
+            
+            # Start with a velocity pointing inward from the edge
             velocity = edge[0] * speed
+            
+            # Add some randomness to the trajectory (±30 degrees)
             velocity = velocity.rotate(random.randint(-30, 30))
+            
+            # Calculate a random position along the chosen edge
+            # The position function takes a value between 0-1 that represents
+            # the relative position along that edge
             position = edge[1](random.uniform(0, 1))
+            
+            # Randomly choose the asteroid size (1-3 times minimum size)
             kind = random.randint(1, ASTEROID_KINDS)
+            
+            # Spawn the new asteroid with calculated parameters
             self.spawn(ASTEROID_MIN_RADIUS * kind, position, velocity)

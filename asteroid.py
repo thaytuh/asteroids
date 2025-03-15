@@ -43,19 +43,31 @@ class Asteroid(CircleShape):
         Returns:
             None
         """
+        # Remove this asteroid from all sprite groups
         self.kill()
+        
+        # If the asteroid is already at minimum size, don't create new ones
         if self.radius <= ASTEROID_MIN_RADIUS:
             return
         else:
+            # Calculate a random angle between 20-50 degrees for the split
             random_angle = random.uniform(20, 50)
+            
+            # Create two new velocity vectors by rotating the original velocity
+            # in opposite directions by the random angle
             velocity1 = self.velocity.rotate(random_angle)
             velocity2 = self.velocity.rotate(-random_angle)
+            
+            # Calculate the new radius for child asteroids
+            # Each split reduces the radius by ASTEROID_MIN_RADIUS
             new_asteroid_radius = self.radius - ASTEROID_MIN_RADIUS
             
-            # first split asteroid
+            # Create the first child asteroid at the same position
             asteroid1 = Asteroid(self.position.x, self.position.y, new_asteroid_radius)
+            # Make it slightly faster (1.2x) than the parent and assign its direction
             asteroid1.velocity = velocity1 * 1.2
             
-            # second split asteroid
+            # Create the second child asteroid at the same position
             asteroid2 = Asteroid(self.position.x, self.position.y, new_asteroid_radius)
+            # Make it slightly faster (1.2x) than the parent and assign its direction
             asteroid2.velocity = velocity2 * 1.2

@@ -25,8 +25,17 @@ class Player(CircleShape):
         Returns:
             list: Three points (pygame.Vector2) representing the triangle vertices.
         """
+        # Get a unit vector pointing in the direction the ship is facing
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        
+        # Calculate a perpendicular vector (right) for the base of the triangle
+        # Scale it to be smaller than the forward vector to create a proper triangle shape
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
+        
+        # Calculate the three points of the triangle:
+        # a = front/nose of the ship
+        # b = bottom-left corner
+        # c = bottom-right corner
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
@@ -59,22 +68,29 @@ class Player(CircleShape):
         Args:
             dt: Delta time in seconds since last frame.
         """
+        # Get the current state of all keyboard keys
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_a]:
+        # Handle rotation controls
+        if keys[pygame.K_a]:  # A key - rotate counter-clockwise
             self.rotation = self.rotation - (PLAYER_TURN_SPEED * dt)
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d]:  # D key - rotate clockwise
             self.rotate(dt)
-        if keys[pygame.K_w]:
+            
+        # Handle movement controls
+        if keys[pygame.K_w]:  # W key - move forward
             self.move(dt)
-        if keys[pygame.K_s]:
+        if keys[pygame.K_s]:  # S key - move backward
             self.move(-dt)
             
+        # Update the shooting cooldown timer
         if self.shoot_timer > 0:
             self.shoot_timer -= dt
             
+        # Handle shooting - only if cooldown timer has expired
         if keys[pygame.K_SPACE] and self.shoot_timer <= 0:
             self.shoot()
+            # Reset the cooldown timer to prevent rapid-fire shooting
             self.shoot_timer = PLAYER_SHOOT_COOLDOWN
         
     def move(self, dt):
